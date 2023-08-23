@@ -18,9 +18,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    isAdmin: { type: Boolean, default: false },
+    address: { type: String },
+    phone: { type: String },
+    imageURL: { type: String },
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
