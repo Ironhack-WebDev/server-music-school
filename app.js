@@ -25,6 +25,9 @@ app.use("/auth", authRoutes);
 const messageRouter = require("./routes/message.routes");
 app.use("/api", messageRouter);
 
+const groupRouter = require("./routes/group.routes");
+app.use("/api", groupRouter);
+
 const instrumentRouter = require("./routes/instrument.routes");
 app.use("/api", instrumentRouter);
 
