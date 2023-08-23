@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const groupSchema = new Schema({
   title: { type: String, required: true  },
   startTime: { type: String, required: true },
-  endTime: { type: Time },
+  endTime: { type: String },
   location: { type: String },
   leader: { type: String },
   imageURL: { type: String },
