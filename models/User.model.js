@@ -21,7 +21,11 @@ const userSchema = new Schema(
     isAdmin: { type: Boolean, default: false },
     address: { type: String },
     phone: { type: String },
-    imageURL: { type: String },
+    imageURL: { 
+      type: String,
+      required: true,
+    },
+    groups: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}],
   },
   {
     timestamps: true,
