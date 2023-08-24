@@ -22,10 +22,9 @@ const userSchema = new Schema(
     address: { type: String },
     phone: { type: String },
     imageURL: { 
-      type: String,
-      required: true,
+      type: String
     },
-    groups: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}],
+    groups: [{type: Schema.Types.ObjectId, ref: 'Group'}],
   },
   {
     timestamps: true,

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-const MessageSchema = new Schema({
+const messageSchema = new Schema({
   title: { type: String },
   message: { type: String },
   sender: {
