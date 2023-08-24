@@ -21,10 +21,8 @@ const userSchema = new Schema(
     isAdmin: { type: Boolean, default: false },
     address: { type: String },
     phone: { type: String },
-    imageURL: { 
-      type: String
-    },
-    groups: [{type: Schema.Types.ObjectId, ref: 'Group'}],
+    imageURL: { type: String, },
+    groups: [{ type: Schema.Types.ObjectId, ref: "Group" }],
   },
   {
     timestamps: true,
