@@ -4,13 +4,7 @@ const { Schema, model } = mongoose;
 const messageSchema = new Schema({
   title: { type: String },
   message: { type: String },
-  sender: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    default: null,
-  },
-  senderName: { type: String },
-  senderEmail: { type: String },
+  sender: { type: Schema.Types.ObjectId, ref: "User" },
   recipient: { type: Schema.Types.ObjectId, ref: "User" },
   timeStamp: { type: Date, default: Date.now },
 });

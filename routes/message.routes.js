@@ -7,23 +7,12 @@ const Message = require("../models/Message.model");
 
 //  POST /api/messages  -  Creates a new message
 router.post("/messages", (req, res, next) => {
-  const { title, message } = req.body;
-
-  let senderData = {};
-
-  if (req.user) {
-    senderData.sender = req.user._id;
-  } else {
-    const { senderName, senderEmail } = req.body;
-    senderData.senderName = senderName;
-    senderData.senderEmail = senderEmail;
-  }
+  const { title, message, sender } = req.body;
 
   const messageData = {
     title,
     message,
-    ...senderData,
-    recipient: req.body.recipient
+    sender
   };
 
   Message.create(messageData)
