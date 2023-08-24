@@ -20,19 +20,6 @@ router.post("/messages", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
-//  GET /api/messages  -  get messages associated with a user
-
-router.get("/messages", async (req, res, next) => {
-  //const userId = req.session.currentUser._id;
-
-  Message.find( /*{ user: userId }*/)
-    .sort({ timeStamp: -1 })
-    .then((userMessagesFromDB) => res.json (userMessagesFromDB))
-    .catch((error) => res.json (err));  
-    });
-
-
-
 //  GET /api/messages/:messageId -  Retrieves a specific message by id
 router.get("/messages/:messageId", async (req, res, next) => {
   const { messageId } = req.params;
