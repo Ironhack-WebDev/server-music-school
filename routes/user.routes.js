@@ -1,9 +1,7 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const mongoose = require("mongoose");
 
 const User = require("../models/User.model");
-const Instrument = require("../models/Instrument.model");
 const Group = require("../models/Group.model");
 const Message = require("../models/Message.model");
 
@@ -54,30 +52,53 @@ router.put("/users/:userId", async (req, res, next) => {
   }
 });
 
-
-
 // GET /api/users/:userId/groups - get the groups linked to specific user
 router.get("/users/:userId/groups", async (req, res, next) => {
     const { userId } = req.params;
   
     try {
-      const groups = await Group.find({
-        members: userId,
-      });
+      const user = await User.findById(userId).populate('groups')
+
+    return res.status(200).json(user.groups)
   
-      const groupData = groups.map((group) => {
-        return {
-          title: group.title,
-          startTime: group.startTime,
-          location: group.location,
-        };
-      });
-  
-      res.status(200).json(groupData);
+
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
+// POST /api/groups/:groupId   - add user to group
+
+router.post('/groups/:groupId/join', async (req, res) => {
+  try {
+
+    if (!loggedIn) {
+      return res.status(401).json({ message: 'Please log in to join this group' });
+    }
+
+    const groupId = req.params.groupId;
+
+    const user = await User.findById(loggedInUserId);
+    const group = await Group.findById(groupId);
+
+    if (group.members.includes(loggedInUserId)) {
+      return res.status(400).json({ message: 'You are already in this group' });
+    }
+
+    user.groups.push(groupId);
+    group.members.push(loggedInUserId);
+
+    await user.save();
+    await group.save();
+
+    return res.status(200).json({ message: 'User joined the group' });
+  } catch (error) {
+    console.error('Error while adding user to group:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 // GET /api/users/:userId/messages - get the messages linked to specific user
 router.get("/users/:userId/messages", async (req, res, next) => {
@@ -110,33 +131,6 @@ router.get("/users/:userId/messages", async (req, res, next) => {
     }
 });
 
-
-// GET /api/users/:userId/lessons - get the lessons linked to specific user
-/*router.get("/users/:userId/lessons", async (req, res, next) => {
-  const { userId } = req.params;
-
-  try {
-    const instruments = await Instrument.find({
-      "lessons.user": userId,
-    });
-
-    const lessons = instruments.flatMap((instrument) => {
-      return instrument.lessons
-        .filter((lesson) => lesson.user.toString() === userId)
-        .map((lesson) => {
-          return {
-            instrument: instrument.instrumentName,
-            time: lesson.time,
-            length: lesson.length,
-          };
-        });
-    });
-
-    res.status(200).json(lessons);
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-});*/
 
 
 
