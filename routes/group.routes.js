@@ -6,9 +6,9 @@ const Group = require("../models/Group.model");
 
 //  POST /api/groups  -  Creates a new group
 router.post("/groups", (req, res, next) => {
-  const { title, startTime, endTime, location, leader, imageURL } = req.body;
+  const { title, startTime, endTime, location, leader, imageURL, day } = req.body;
 
-  Group.create({ title, startTime, endTime, location, leader, imageURL })
+  Group.create({ title, startTime, endTime, location, leader, imageURL, day })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
@@ -19,6 +19,24 @@ router.get("/groups", async (req, res, next) => {
     .then((allGroups) => res.json(allGroups))
     .catch((err) => res.json(err));
 });
+
+ // GET /api/timetable?day=${day}
+
+router.get("/timetable", async (req, res, next) => {
+  const { day } = req.query;
+
+  if (!day) {
+    return res.status(400).json({ message: "Day parameter is missing." });
+  }
+
+  try {
+    const groups = await Group.find({ day:day }); 
+    res.json(groups);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching groups." });
+  }
+});
+
 
 //  GET /api/groups/:groupId -  Retrieves a specific group by id
 router.get("/groups/:groupId", async (req, res, next) => {

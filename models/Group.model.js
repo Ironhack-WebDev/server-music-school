@@ -8,6 +8,7 @@ const groupSchema = new Schema({
   location: { type: String },
   leader: { type: String },
   imageURL: { type: String },
+  day: {type: String},
   members: [{ type: Schema.Types.ObjectId, ref: "User" }]
 });
 
