@@ -4,15 +4,25 @@ const mongoose = require("mongoose");
 
 const Message = require("../models/Message.model");
 
+// GET /api/messages - get all messages - FOR TESTING
+router.get ("/messages", async (req, res,next) => {
+  Message.find()
+  .then ((allMessages) => res.json(allMessages))
+  .catch((err)=> res.json(err));
+});
+
 
 //  POST /api/messages  -  Creates a new message
 router.post("/messages", (req, res, next) => {
-  const { title, message, sender } = req.body;
+  const { title, message, sender, senderName, senderEmail, recipient } = req.body;
 
   const messageData = {
     title,
     message,
-    sender
+    sender,
+    senderName,
+    senderEmail,
+    recipient
   };
 
   Message.create(messageData)
@@ -59,5 +69,24 @@ router.delete("/messages/:messageId", (req, res, next) => {
     )
     .catch((error) => res.json(error));
 });
+
+
+// GET /api/users/messages?userId=${userId} - get the messages linked to specific user
+router.get("/users/messages", async (req, res, next) => {
+  const { userId } = req.query;
+
+  try {
+    const messages = await Message.find({
+      recipient: userId,
+    });
+
+    res.json(messages);
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 
 module.exports = router;

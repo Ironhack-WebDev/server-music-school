@@ -21,7 +21,6 @@ app.use("/api", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
-
 const messageRouter = require("./routes/message.routes");
 app.use("/api", messageRouter);
 
@@ -30,6 +29,9 @@ app.use("/api", groupRouter);
 
 const instrumentRouter = require("./routes/instrument.routes");
 app.use("/api", instrumentRouter);
+
+const lessonRouter = require("./routes/lesson.routes");
+app.use("/api", lessonRouter);
 
 const userRouter = require("./routes/user.routes");
 app.use("/api", userRouter);
