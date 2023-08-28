@@ -10,25 +10,32 @@ const Lesson = require("../models/Lesson.model");
 router.post("/lessons", async (req, res, next) => {
   const { userId, time, length, instrumentId } = req.body;
 
-  console.log("Request Body:", req.body); // Log the entire request body
+  console.log("Request Body:", req.body); 
 
   Lesson.create({ user: userId, time, length, instrument: instrumentId })
     .then((createdLesson) => {
-      console.log("Created Lesson:", createdLesson); // Log the created lesson object
       res.json(createdLesson);
     })
     .catch((err) => {
-      console.error("Error creating lesson:", err); // Log the error
-      res.status(500).json(err); // Return an error response
+      res.status(500).json(err); 
     });
 });
 
 
-//  GET /api/lessons -  Retrieves all of the lessons
+//  GET /api/lessons?instrument=${instrument} -  Retrieve lessons associated with an instrument
 router.get("/lessons", async (req, res, next) => {
-  Lesson.find()
-    .then((allLessons) => res.json(allLessons))
-    .catch((err) => res.json(err));
+  const { instrument } = req.query;
+
+  if (!instrument) {
+    return res.status(400).json({ message: "Instrument parameter is missing." });
+  }
+
+  try {
+    const lessons = await Lesson.find({ instrument: instrument });
+    res.json(lessons);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching lessons." });
+  }
 });
 
 //  GET /api/lessons/:lessonId -  Retrieves a specific lesson by id
