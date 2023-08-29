@@ -6,9 +6,9 @@ const Instrument = require("../models/Instrument.model");
 
 //  POST /api/instruments  -  Creates a new instrument
 router.post("/instruments", (req, res, next) => {
-  const { instrumentName, teacher, description, location } = req.body;
+  const { instrumentName, teacher, description, location, imageURL } = req.body;
 
-  Instrument.create({ instrumentName, teacher, description, location })
+  Instrument.create({ instrumentName, teacher, description, location, imageURL })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
