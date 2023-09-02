@@ -9,6 +9,9 @@ const groupSchema = new Schema({
   leader: { type: String },
   imageURL: { type: String },
   day: {type: String},
+  skillLevel: {type: String},
+  instruments: {type: Array},
+  description: {type: String},
   members: [{ type: Schema.Types.ObjectId, ref: "User" }]
 });
 
