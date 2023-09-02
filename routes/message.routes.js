@@ -88,5 +88,21 @@ router.get("/users/messages", async (req, res, next) => {
 });
 
 
+// GET /api/users/messages?userId=${userId} - get the messages send by specific user
+router.get("/users/messages/sent", async (req, res, next) => {
+  const { userId } = req.query;
+
+  try {
+    const messages = await Message.find({
+      sender: userId,
+    });
+
+    res.json(messages);
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 module.exports = router;
