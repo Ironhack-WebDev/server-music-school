@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User.model");
 const Group = require("../models/Group.model");
 const Message = require("../models/Message.model");
+const Lesson = require("../models/Lesson.model");
 
 // GET /api/users/:userId - Retrieves a specific user by its id
 router.get("/users/:userId", async (req, res, next) => {
@@ -108,6 +109,9 @@ router.post("/groups/:groupId/join", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+
 
 // GET /api/users/:userId/messages - get the messages linked to specific user
 router.get("/users/:userId/messages", async (req, res, next) => {

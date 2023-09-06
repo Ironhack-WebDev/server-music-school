@@ -71,22 +71,6 @@ router.delete("/messages/:messageId", (req, res, next) => {
 });
 
 
-// GET /api/users/messages?userId=${userId} - get the messages linked to specific user
-router.get("/users/messages", async (req, res, next) => {
-  const { userId } = req.query;
-
-  try {
-    const messages = await Message.find({
-      recipient: userId,
-    });
-
-    res.json(messages);
-  } catch (error) {
-    console.error("Error fetching messages:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
 
 
 module.exports = router;

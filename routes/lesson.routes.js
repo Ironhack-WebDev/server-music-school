@@ -38,6 +38,28 @@ router.get("/lessons", async (req, res, next) => {
   }
 });
 
+// GET /api/lessons/student?user=${user}
+router.get("/lessons/student", async (req, res, next) => {
+  const { user } = req.query;
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or missing 'user' parameter." });
+  }
+
+  try {
+    const lessons = await Lesson.find({ user: user });
+
+    if (lessons.length === 0) {
+      return res.status(404).json({ message: "No lessons found with this user as a member." });
+    }
+
+    res.json(lessons);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching groups." });
+  }
+});
+
 //  GET /api/lessons/:lessonId -  Retrieves a specific lesson by id
 router.get("/lessons/:lessonId", async (req, res, next) => {
   const { lessonId } = req.params;

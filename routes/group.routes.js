@@ -20,6 +20,29 @@ router.get("/groups", async (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+//  GET /api/groups/members?user=${user} -  Retrieves a users groups
+router.get("/groups/members", async (req, res, next) => {
+  const { user } = req.query;
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or missing 'user' parameter." });
+  }
+
+  try {
+    const groups = await Group.find({ members: user });
+
+    if (groups.length === 0) {
+      return res.status(404).json({ message: "No groups found with this user as a member." });
+    }
+
+    res.json(groups);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching groups." });
+  }
+});
+
+
  // GET /api/timetable?day=${day}
 
 router.get("/timetable", async (req, res, next) => {
