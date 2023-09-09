@@ -6,9 +6,31 @@ const Group = require("../models/Group.model");
 
 //  POST /api/groups  -  Creates a new group
 router.post("/groups", (req, res, next) => {
-  const { title, startTime, endTime, location, leader, imageURL, day, skillLevel, instruments, description } = req.body;
+  const {
+    title,
+    startTime,
+    endTime,
+    location,
+    leader,
+    imageURL,
+    day,
+    skillLevel,
+    instruments,
+    description,
+  } = req.body;
 
-  Group.create({ title, startTime, endTime, location, leader, imageURL, day, skillLevel, instruments, description })
+  Group.create({
+    title,
+    startTime,
+    endTime,
+    location,
+    leader,
+    imageURL,
+    day,
+    skillLevel,
+    instruments,
+    description,
+  })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
@@ -25,25 +47,30 @@ router.get("/groups/members", async (req, res, next) => {
   const { user } = req.query;
 
   if (!user) {
-    return res.status(400).json({ message: "Invalid or missing 'user' parameter." });
+    return res
+      .status(400)
+      .json({ message: "Invalid or missing 'user' parameter." });
   }
 
   try {
     const groups = await Group.find({ members: user });
 
     if (groups.length === 0) {
-      return res.status(404).json({ message: "No groups found with this user as a member." });
+      return res
+        .status(404)
+        .json({ message: "No groups found with this user as a member." });
     }
 
     res.json(groups);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching groups." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching groups." });
   }
 });
 
-
- // GET /api/timetable?day=${day}
+// GET /api/timetable?day=${day}
 
 router.get("/timetable", async (req, res, next) => {
   const { day } = req.query;
@@ -53,13 +80,14 @@ router.get("/timetable", async (req, res, next) => {
   }
 
   try {
-    const groups = await Group.find({ day:day }); 
+    const groups = await Group.find({ day: day });
     res.json(groups);
   } catch (error) {
-    res.status(500).json({ message: "An error occurred while fetching groups." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching groups." });
   }
 });
-
 
 //  GET /api/groups/:groupId -  Retrieves a specific group by id
 router.get("/groups/:groupId", async (req, res, next) => {
@@ -90,12 +118,11 @@ router.put("/groups/:groupId", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-
 // PUT /api/groups/:groupId/join - user joins a group
 router.put("/groups/:groupId/join", async (req, res) => {
   try {
     const { groupId } = req.params;
-    const { userId } = req.body; 
+    const { userId } = req.body;
 
     const group = await Group.findById(groupId);
 
@@ -104,7 +131,9 @@ router.put("/groups/:groupId/join", async (req, res) => {
     }
 
     if (group.members.includes(userId)) {
-      return res.status(400).json({ message: "User is already a member of this group" });
+      return res
+        .status(400)
+        .json({ message: "User is already a member of this group" });
     }
 
     group.members.push(userId);
@@ -119,7 +148,6 @@ router.put("/groups/:groupId/join", async (req, res) => {
 });
 
 module.exports = router;
-
 
 // DELETE  /api/groups/:groupId  -  Deletes a specific group by id
 router.delete("/groups/:groupId", (req, res, next) => {
