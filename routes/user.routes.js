@@ -135,6 +135,7 @@ router.get("/users/:userId/messages", async (req, res, next) => {
         message: message.message,
         _id: message._id,
         sender: senderInfo,
+        timeStamp: message.timeStamp
       };
     });
 
