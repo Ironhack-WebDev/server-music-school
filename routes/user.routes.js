@@ -118,9 +118,8 @@ router.get("/users/:userId/messages", async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const messages = await Message.find({
-      recipient: userId,
-    });
+    const messages = await Message.find({ recipient: userId })
+      .sort({ timeStamp: -1 });
 
     const messageData = messages.map((message) => {
       let senderInfo = message.sender;
@@ -136,7 +135,6 @@ router.get("/users/:userId/messages", async (req, res, next) => {
         message: message.message,
         _id: message._id,
         sender: senderInfo,
-        
       };
     });
 
