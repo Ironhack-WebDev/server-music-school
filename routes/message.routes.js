@@ -72,14 +72,13 @@ router.delete("/messages/:messageId", (req, res, next) => {
 
 
 
-// GET /api/users/messages?userId=${userId} - get the messages send by specific user
+// GET /api/users/messages?userId=${userId} - get the messages sent by specific user
 router.get("/users/messages/sent", async (req, res, next) => {
   const { userId } = req.query;
 
   try {
-    const messages = await Message.find({
-      sender: userId,
-    });
+    const messages = await Message.find({ sender: userId })
+      .sort({ timeStamp: -1 });
 
     res.json(messages);
   } catch (error) {
