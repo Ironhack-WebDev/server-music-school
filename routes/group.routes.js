@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Group = require("../models/Group.model");
+const User = require("../models/User.model");
 
 //  POST /api/groups  -  Creates a new group
 router.post("/groups", (req, res, next) => {
@@ -138,6 +139,12 @@ router.put("/groups/:groupId/join", async (req, res) => {
 
     group.members.push(userId);
 
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $push: { groups: groupId } },
+      { new: true }
+    );
+
     await group.save();
 
     res.status(200).json({ message: "Joined group successfully" });
@@ -147,7 +154,51 @@ router.put("/groups/:groupId/join", async (req, res) => {
   }
 });
 
-module.exports = router;
+
+// PUT /api/groups/:id/leave - removes a user from a group
+router.put("/groups/:groupId/leave", async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const { userId } = req.body;
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    if (!group.members.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "User is not a member of this group" });
+    }
+
+    const updatedGroup = await Group.findOneAndUpdate(
+      { _id: groupId, members: userId }, 
+      { $pull: { members: userId } },    
+      { new: true }                      
+    );
+    
+    if (!updatedGroup) {
+      return res.status(400).json({ message: "User is not a member of this group" });
+    }
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { groups: groupId } }, 
+      { new: true }
+    );
+    
+    if (!updatedUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Left group successfully" });
+  } catch (error) {
+    console.error("Error leaving group:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 // DELETE  /api/groups/:groupId  -  Deletes a specific group by id
 router.delete("/groups/:groupId", (req, res, next) => {
