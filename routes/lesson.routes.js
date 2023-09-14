@@ -31,12 +31,13 @@ router.get("/lessons", async (req, res, next) => {
   }
 
   try {
-    const lessons = await Lesson.find({ instrument: instrument });
+    const lessons = await Lesson.find({ instrument: instrument }).sort({ time: 1 });
     res.json(lessons);
   } catch (error) {
     res.status(500).json({ message: "An error occurred while fetching lessons." });
   }
 });
+
 
 // GET /api/lessons/student?user=${user}
 router.get("/lessons/student", async (req, res, next) => {
